@@ -56,3 +56,6 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+=======
+# cleango-laundry
+>>>>>>> 868b8f7c41014e4eb158f365ca9021333cbcc7ca
