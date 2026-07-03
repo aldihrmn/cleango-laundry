@@ -1,0 +1,104 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Edit Service
+        </h2>
+    </x-slot>
+
+    <div class="py-6">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+
+            <div class="bg-white shadow rounded-lg p-6">
+
+                <h3 class="text-xl font-bold mb-5">
+                    Form Edit Service
+                </h3>
+
+                @if ($errors->any())
+                    <div class="mb-4 bg-red-100 text-red-700 p-4 rounded">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>• {{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form action="{{ route('services.update', $service->id) }}" method="POST">
+
+                    @csrf
+                    @method('PUT')
+
+                    <div class="mb-4">
+                        <label class="block font-medium mb-2">
+                            Nama Service
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            value="{{ old('name', $service->name) }}"
+                            class="w-full border rounded p-2"
+                            required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block font-medium mb-2">
+                            Harga
+                        </label>
+
+                        <input
+                            type="number"
+                            name="price"
+                            value="{{ old('price', $service->price) }}"
+                            class="w-full border rounded p-2"
+                            required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block font-medium mb-2">
+                            Durasi (Hari)
+                        </label>
+
+                        <input
+                            type="number"
+                            name="duration"
+                            value="{{ old('duration', $service->duration) }}"
+                            class="w-full border rounded p-2"
+                            required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block font-medium mb-2">
+                            Deskripsi
+                        </label>
+
+                        <textarea
+                            name="description"
+                            rows="4"
+                            class="w-full border rounded p-2">{{ old('description', $service->description) }}</textarea>
+                    </div>
+
+                    <div class="flex gap-2">
+
+                        <button
+                            type="submit"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded">
+                            Update
+                        </button>
+
+                        <a href="{{ route('services.index') }}"
+                           class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded">
+                            Kembali
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+</x-app-layout>
