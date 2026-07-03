@@ -1,116 +1,85 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Data Service
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+@section('title', 'Data Service')
 
-            @if(session('success'))
-                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
-                    {{ session('success') }}
-                </div>
-            @endif
+@section('content')
 
-            <div class="bg-white shadow rounded-lg p-6">
+<div class="flex justify-between items-center mb-6">
 
-                <div class="flex justify-between items-center mb-5">
+    <h2 class="text-xl font-bold">
+        Daftar Service
+    </h2>
 
-                    <h3 class="text-xl font-bold">
-                        Daftar Service
-                    </h3>
+    <a href="{{ route('services.create') }}"
+       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+        + Tambah Service
+    </a>
 
-                    <a href="{{ route('services.create') }}"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                        + Tambah Service
+</div>
+
+<div class="bg-white shadow rounded-lg overflow-hidden">
+
+    <table class="w-full">
+
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="p-3 border">No</th>
+                <th class="p-3 border">Nama Service</th>
+                <th class="p-3 border">Harga</th>
+                <th class="p-3 border">Durasi</th>
+                <th class="p-3 border">Deskripsi</th>
+                <th class="p-3 border">Aksi</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        @forelse($services as $service)
+
+            <tr>
+                <td class="p-3 border text-center">{{ $loop->iteration }}</td>
+                <td class="p-3 border">{{ $service->name }}</td>
+                <td class="p-3 border">Rp {{ number_format($service->price, 0, ',', '.') }}</td>
+                <td class="p-3 border">{{ $service->duration }} Jam</td>
+                <td class="p-3 border">{{ $service->description }}</td>
+
+                <td class="p-3 border text-center">
+
+                    <a href="{{ route('services.edit', $service->id) }}"
+                       class="bg-yellow-500 text-white px-3 py-1 rounded">
+                        Edit
                     </a>
 
-                </div>
+                    <form action="{{ route('services.destroy', $service->id) }}"
+                          method="POST"
+                          class="inline">
+                        @csrf
+                        @method('DELETE')
 
-                <table class="w-full border border-collapse">
+                        <button class="bg-red-600 text-white px-3 py-1 rounded"
+                                onclick="return confirm('Hapus service?')">
+                            Hapus
+                        </button>
 
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="border p-2">No</th>
-                            <th class="border p-2">Nama Service</th>
-                            <th class="border p-2">Harga</th>
-                            <th class="border p-2">Durasi</th>
-                            <th class="border p-2">Deskripsi</th>
-                            <th class="border p-2">Aksi</th>
-                        </tr>
-                    </thead>
+                    </form>
 
-                    <tbody>
+                </td>
+            </tr>
 
-                        @forelse ($services as $service)
+        @empty
 
-                            <tr>
+            <tr>
+                <td colspan="6" class="text-center p-5">
+                    Belum ada data service
+                </td>
+            </tr>
 
-                                <td class="border p-2 text-center">
-                                    {{ $loop->iteration }}
-                                </td>
+        @endforelse
 
-                                <td class="border p-2">
-                                    {{ $service->name }}
-                                </td>
+        </tbody>
 
-                                <td class="border p-2">
-                                    Rp {{ number_format($service->price, 0, ',', '.') }}
-                                </td>
+    </table>
 
-                                <td class="border p-2">
-                                    {{ $service->duration }} Hari
-                                </td>
+</div>
 
-                                <td class="border p-2">
-                                    {{ $service->description ?? '-' }}
-                                </td>
-
-                                <td class="border p-2 text-center">
-
-                                    <a href="{{ route('services.edit', $service->id) }}"
-                                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
-                                        Edit
-                                    </a>
-
-                                    <form action="{{ route('services.destroy', $service->id) }}"
-                                        method="POST"
-                                        class="inline">
-
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button
-                                            onclick="return confirm('Yakin ingin menghapus layanan ini?')"
-                                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
-                                            Hapus
-                                        </button>
-
-                                    </form>
-
-                                </td>
-
-                            </tr>
-
-                        @empty
-
-                            <tr>
-                                <td colspan="6" class="border p-3 text-center">
-                                    Belum ada data service.
-                                </td>
-                            </tr>
-
-                        @endforelse
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-    </div>
-
-</x-app-layout>
+@endsection

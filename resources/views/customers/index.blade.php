@@ -1,96 +1,84 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Data Customer
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+@section('title', 'Data Customer')
 
-            <div class="bg-white shadow rounded-lg p-6">
+@section('content')
 
-                <div class="flex justify-between items-center mb-5">
+<div class="flex justify-between items-center mb-6">
 
-                    <h3 class="text-xl font-bold">
-                        Daftar Customer
-                    </h3>
+    <h2 class="text-xl font-bold">
+        Daftar Customer
+    </h2>
 
-                    <a href="{{ route('customers.create') }}"
-                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                        + Tambah Customer
+    <a href="{{ route('customers.create') }}"
+       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+        + Tambah Customer
+    </a>
+
+</div>
+
+<div class="bg-white shadow rounded-lg overflow-hidden">
+
+    <table class="w-full">
+
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="p-3 border">No</th>
+                <th class="p-3 border">Nama</th>
+                <th class="p-3 border">No HP</th>
+                <th class="p-3 border">Email</th>
+                <th class="p-3 border">Alamat</th>
+                <th class="p-3 border">Aksi</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        @forelse($customers as $customer)
+
+            <tr>
+                <td class="p-3 border text-center">{{ $loop->iteration }}</td>
+                <td class="p-3 border">{{ $customer->name }}</td>
+                <td class="p-3 border">{{ $customer->phone }}</td>
+                <td class="p-3 border">{{ $customer->email }}</td>
+                <td class="p-3 border">{{ $customer->address }}</td>
+
+                <td class="p-3 border text-center">
+
+                    <a href="{{ route('customers.edit', $customer->id) }}"
+                       class="bg-yellow-500 text-white px-3 py-1 rounded">
+                        Edit
                     </a>
 
-                </div>
+                    <form action="{{ route('customers.destroy', $customer->id) }}"
+                          method="POST"
+                          class="inline">
+                        @csrf
+                        @method('DELETE')
 
-                <table class="w-full border border-collapse">
+                        <button class="bg-red-600 text-white px-3 py-1 rounded"
+                                onclick="return confirm('Hapus customer?')">
+                            Hapus
+                        </button>
+                    </form>
 
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="border p-2">No</th>
-                            <th class="border p-2">Nama</th>
-                            <th class="border p-2">No HP</th>
-                            <th class="border p-2">Email</th>
-                            <th class="border p-2">Alamat</th>
-                            <th class="border p-2">Aksi</th>
-                        </tr>
-                    </thead>
+                </td>
+            </tr>
 
-                    <tbody>
+        @empty
 
-                        @forelse ($customers as $customer)
+            <tr>
+                <td colspan="6" class="text-center p-5">
+                    Belum ada data customer
+                </td>
+            </tr>
 
-                        <tr>
+        @endforelse
 
-                            <td class="border p-2">{{ $loop->iteration }}</td>
-                            <td class="border p-2">{{ $customer->name }}</td>
-                            <td class="border p-2">{{ $customer->phone }}</td>
-                            <td class="border p-2">{{ $customer->email }}</td>
-                            <td class="border p-2">{{ $customer->address }}</td>
+        </tbody>
 
-                            <td class="border p-2 text-center">
+    </table>
 
-                                <a href="{{ route('customers.edit',$customer->id) }}"
-                                   class="bg-yellow-500 text-white px-3 py-1 rounded">
-                                    Edit
-                                </a>
+</div>
 
-                                <form action="{{ route('customers.destroy',$customer->id) }}"
-                                      method="POST"
-                                      class="inline">
-
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button
-                                        onclick="return confirm('Hapus customer ini?')"
-                                        class="bg-red-600 text-white px-3 py-1 rounded">
-                                        Hapus
-                                    </button>
-
-                                </form>
-
-                            </td>
-
-                        </tr>
-
-                        @empty
-
-                        <tr>
-                            <td colspan="6" class="text-center border p-3">
-                                Belum ada data customer.
-                            </td>
-                        </tr>
-
-                        @endforelse
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-    </div>
-
-</x-app-layout>
+@endsection
