@@ -10,10 +10,12 @@ class Service extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'price',
-        'duration',
-        'description',
+        'nama_layanan',
+        'jenis_layanan',
+        'harga_per_kg',
+        'estimasi_hari',
+        'deskripsi',
+        'is_active',
     ];
 
     public function orderItems()

@@ -22,10 +22,12 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:100',
-            'price' => 'required|numeric',
-            'duration' => 'required|integer',
-            'description' => 'nullable',
+            'nama_layanan'   => 'required|max:100',
+            'jenis_layanan'  => 'required|max:100',
+            'harga_per_kg'   => 'required|numeric',
+            'estimasi_hari'  => 'required|integer',
+            'deskripsi'      => 'nullable',
+            'is_active'      => 'required|boolean',
         ]);
 
         Service::create($request->all());
@@ -47,10 +49,12 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $request->validate([
-            'name' => 'required|max:100',
-            'price' => 'required|numeric',
-            'duration' => 'required|integer',
-            'description' => 'nullable',
+            'nama_layanan'   => 'required|max:100',
+            'jenis_layanan'  => 'required|max:100',
+            'harga_per_kg'   => 'required|numeric',
+            'estimasi_hari'  => 'required|integer',
+            'deskripsi'      => 'nullable',
+            'is_active'      => 'required|boolean',
         ]);
 
         $service->update($request->all());

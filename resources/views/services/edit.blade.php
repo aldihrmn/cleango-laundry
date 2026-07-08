@@ -31,39 +31,52 @@
 
                     <div class="mb-4">
                         <label class="block font-medium mb-2">
-                            Nama Service
+                            Nama Layanan
                         </label>
 
                         <input
                             type="text"
-                            name="name"
-                            value="{{ old('name', $service->name) }}"
+                            name="nama_layanan"
+                            value="{{ old('nama_layanan', $service->nama_layanan) }}"
                             class="w-full border rounded p-2"
                             required>
                     </div>
 
                     <div class="mb-4">
                         <label class="block font-medium mb-2">
-                            Harga
+                            Jenis Layanan
                         </label>
 
                         <input
-                            type="number"
-                            name="price"
-                            value="{{ old('price', $service->price) }}"
+                            type="text"
+                            name="jenis_layanan"
+                            value="{{ old('jenis_layanan', $service->jenis_layanan) }}"
                             class="w-full border rounded p-2"
                             required>
                     </div>
 
                     <div class="mb-4">
                         <label class="block font-medium mb-2">
-                            Durasi (Hari)
+                            Harga per Kg
                         </label>
 
                         <input
                             type="number"
-                            name="duration"
-                            value="{{ old('duration', $service->duration) }}"
+                            name="harga_per_kg"
+                            value="{{ old('harga_per_kg', $service->harga_per_kg) }}"
+                            class="w-full border rounded p-2"
+                            required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block font-medium mb-2">
+                            Estimasi Hari
+                        </label>
+
+                        <input
+                            type="number"
+                            name="estimasi_hari"
+                            value="{{ old('estimasi_hari', $service->estimasi_hari) }}"
                             class="w-full border rounded p-2"
                             required>
                     </div>
@@ -74,9 +87,29 @@
                         </label>
 
                         <textarea
-                            name="description"
+                            name="deskripsi"
                             rows="4"
-                            class="w-full border rounded p-2">{{ old('description', $service->description) }}</textarea>
+                            class="w-full border rounded p-2">{{ old('deskripsi', $service->deskripsi) }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block font-medium mb-2">
+                            Status
+                        </label>
+
+                        <select
+                            name="is_active"
+                            class="w-full border rounded p-2">
+
+                            <option value="1" {{ $service->is_active ? 'selected' : '' }}>
+                                Aktif
+                            </option>
+
+                            <option value="0" {{ !$service->is_active ? 'selected' : '' }}>
+                                Tidak Aktif
+                            </option>
+
+                        </select>
                     </div>
 
                     <div class="flex gap-2">
