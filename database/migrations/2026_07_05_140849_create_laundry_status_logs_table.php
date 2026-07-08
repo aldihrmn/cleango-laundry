@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('laundry_status_logs', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->foreignId('service_id')->constrained()->onDelete('cascade');
+            $table->foreignId('order_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-            $table->integer('qty');
-            $table->decimal('total_price', 10, 2);
+            $table->string('status');
 
-            $table->string('status')->default('proses');
+            $table->text('keterangan')->nullable();
 
             $table->timestamps();
         });
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('laundry_status_logs');
     }
 };

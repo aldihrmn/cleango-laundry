@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->decimal('price', 10, 2);
-            $table->integer('duration');
-            $table->text('description')->nullable();
+
+            $table->string('nama_layanan');
+            $table->string('jenis_layanan');
+            $table->decimal('harga_per_kg', 10, 2);
+            $table->integer('estimasi_hari');
+            $table->text('deskripsi')->nullable();
+            $table->boolean('is_active')->default(true);
+
             $table->timestamps();
         });
     }

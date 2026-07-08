@@ -17,6 +17,12 @@
 
 </div>
 
+@if(session('success'))
+<div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+    {{ session('success') }}
+</div>
+@endif
+
 <div class="bg-white shadow rounded-lg overflow-hidden">
 
     <table class="w-full">
@@ -24,10 +30,11 @@
         <thead class="bg-gray-100">
             <tr>
                 <th class="p-3 border">No</th>
-                <th class="p-3 border">Nama Service</th>
-                <th class="p-3 border">Harga</th>
-                <th class="p-3 border">Durasi</th>
-                <th class="p-3 border">Deskripsi</th>
+                <th class="p-3 border">Nama Layanan</th>
+                <th class="p-3 border">Jenis</th>
+                <th class="p-3 border">Harga/Kg</th>
+                <th class="p-3 border">Estimasi</th>
+                <th class="p-3 border">Status</th>
                 <th class="p-3 border">Aksi</th>
             </tr>
         </thead>
@@ -37,41 +44,67 @@
         @forelse($services as $service)
 
             <tr>
-                <td class="p-3 border text-center">{{ $loop->iteration }}</td>
-                <td class="p-3 border">{{ $service->name }}</td>
-                <td class="p-3 border">Rp {{ number_format($service->price, 0, ',', '.') }}</td>
-                <td class="p-3 border">{{ $service->duration }} Jam</td>
-                <td class="p-3 border">{{ $service->description }}</td>
+
+                <td class="p-3 border text-center">
+                    {{ $loop->iteration }}
+                </td>
+
+                <td class="p-3 border">
+                    {{ $service->nama_layanan }}
+                </td>
+
+                <td class="p-3 border">
+                    {{ $service->jenis_layanan }}
+                </td>
+
+                <td class="p-3 border">
+                    Rp {{ number_format($service->harga_per_kg,0,',','.') }}
+                </td>
+
+                <td class="p-3 border">
+                    {{ $service->estimasi_hari }} Hari
+                </td>
+
+                <td class="p-3 border">
+                    {{ $service->is_active ? 'Aktif' : 'Tidak Aktif' }}
+                </td>
 
                 <td class="p-3 border text-center">
 
-                    <a href="{{ route('services.edit', $service->id) }}"
+                    <a href="{{ route('services.edit',$service->id) }}"
                        class="bg-yellow-500 text-white px-3 py-1 rounded">
                         Edit
                     </a>
 
-                    <form action="{{ route('services.destroy', $service->id) }}"
+                    <form action="{{ route('services.destroy',$service->id) }}"
                           method="POST"
                           class="inline">
+
                         @csrf
                         @method('DELETE')
 
-                        <button class="bg-red-600 text-white px-3 py-1 rounded"
-                                onclick="return confirm('Hapus service?')">
+                        <button
+                            onclick="return confirm('Hapus layanan ini?')"
+                            class="bg-red-600 text-white px-3 py-1 rounded">
+
                             Hapus
+
                         </button>
 
                     </form>
 
                 </td>
+
             </tr>
 
         @empty
 
             <tr>
-                <td colspan="6" class="text-center p-5">
+
+                <td colspan="7" class="text-center p-5">
                     Belum ada data service
                 </td>
+
             </tr>
 
         @endforelse

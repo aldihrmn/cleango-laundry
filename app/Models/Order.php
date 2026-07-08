@@ -9,21 +9,37 @@ class Order extends Model
 {
     use HasFactory;
 
+    // Field yang boleh diisi (mass assignment)
     protected $fillable = [
-        'customer_id',
-        'service_id',
-        'qty',
-        'total_price',
+        'user_id',
+        'kode_order',
+        'tanggal_order',
         'status',
+        'pickup_type',
+        'estimasi_selesai',
+        'total_harga',
+        'catatan',
     ];
 
-    public function customer()
+    // RELATIONSHIP
+
+    public function user()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function service()
+    public function orderItems()
     {
-        return $this->belongsTo(Service::class);
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
+
+    public function statusLogs()
+    {
+        return $this->hasMany(LaundryStatusLog::class);
     }
 }
