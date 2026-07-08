@@ -31,11 +31,6 @@
                 📊 Dashboard
             </a>
 
-            <a href="{{ route('customers.index') }}"
-               class="block px-6 py-3 hover:bg-blue-700 transition">
-                👤 Customer
-            </a>
-
             <a href="{{ route('services.index') }}"
                class="block px-6 py-3 hover:bg-blue-700 transition">
                 🧺 Service

@@ -17,8 +17,8 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
     <div class="bg-white shadow rounded-lg p-6 border-l-4 border-blue-500">
-        <p class="text-gray-500">Total Customer</p>
-        <h2 class="text-3xl font-bold">{{ $totalCustomer }}</h2>
+        <p class="text-gray-500">Total User</p>
+        <h2 class="text-3xl font-bold">{{ $totalUser }}</h2>
     </div>
 
     <div class="bg-white shadow rounded-lg p-6 border-l-4 border-green-500">
@@ -34,7 +34,7 @@
     <div class="bg-white shadow rounded-lg p-6 border-l-4 border-red-500">
         <p class="text-gray-500">Pendapatan</p>
         <h2 class="text-3xl font-bold">
-            Rp {{ number_format($totalRevenue,0,',','.') }}
+            Rp {{ number_format($totalRevenue, 0, ',', '.') }}
         </h2>
     </div>
 

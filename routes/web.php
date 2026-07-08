@@ -17,9 +17,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    // Customer
-    Route::resource('customers', CustomerController::class);
-
     // Service
     Route::resource('services', ServiceController::class);
 
