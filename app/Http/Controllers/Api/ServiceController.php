@@ -13,8 +13,9 @@ class ServiceController extends Controller
      */
     public function index(): JsonResponse
     {
-        $services = Service::orderBy('price', 'asc')
-            ->get(['id', 'name', 'price', 'duration', 'description']);
+        $services = Service::where('is_active', true)
+            ->orderBy('harga_per_kg', 'asc')
+            ->get(['id', 'nama_layanan', 'jenis_layanan', 'harga_per_kg', 'estimasi_hari', 'deskripsi']);
 
         return response()->json([
             'success' => true,
