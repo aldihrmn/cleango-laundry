@@ -5,19 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class LaundryStatusLog extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'price',
-        'duration',
-        'description',
+        'order_id',
+        'status',
+        'keterangan'
     ];
 
-    public function orderItems()
+    // RELATIONSHIP
+    public function order()
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->belongsTo(Order::class);
     }
 }
