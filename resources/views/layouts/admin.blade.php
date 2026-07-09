@@ -38,7 +38,7 @@
 
             <a href="{{ route('orders.index') }}"
                 class="block px-6 py-3 hover:bg-blue-700 transition">
-                📦 Data Order
+                📦 Order
             </a>
 
             <a href="{{ route('payments.index') }}"

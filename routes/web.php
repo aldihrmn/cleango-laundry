@@ -19,11 +19,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
     // Orders
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::resource('orders', OrderController::class);
     // Service
     Route::resource('services', ServiceController::class);
-    //payments
-    Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+    // Payments
+    Route::resource('payments', PaymentController::class);
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
