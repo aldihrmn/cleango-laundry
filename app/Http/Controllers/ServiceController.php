@@ -7,11 +7,41 @@ use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $services = Service::latest()->get();
+        $query = Service::query();
 
-        return view('services.index', compact('services'));
+        // Search berdasarkan nama layanan
+        if ($request->filled('search')) {
+            $query->where('nama_layanan', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter berdasarkan jenis layanan
+        if ($request->filled('jenis_layanan')) {
+            $query->where('jenis_layanan', $request->jenis_layanan);
+        }
+
+        // Filter berdasarkan status
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status);
+        }
+
+        // Data dropdown jenis layanan
+        $jenisLayanan = Service::select('jenis_layanan')
+            ->distinct()
+            ->orderBy('jenis_layanan')
+            ->pluck('jenis_layanan');
+
+        // Pagination maksimal 20 data
+        $services = $query
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('services.index', compact(
+            'services',
+            'jenisLayanan'
+        ));
     }
 
     public function create()
@@ -22,12 +52,12 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_layanan'   => 'required|max:100',
-            'jenis_layanan'  => 'required|max:100',
-            'harga_per_kg'   => 'required|numeric',
-            'estimasi_hari'  => 'required|integer',
-            'deskripsi'      => 'nullable',
-            'is_active'      => 'required|boolean',
+            'nama_layanan'  => 'required|max:100',
+            'jenis_layanan' => 'required|max:100',
+            'harga_per_kg'  => 'required|numeric',
+            'estimasi_hari' => 'required|integer',
+            'deskripsi'     => 'nullable',
+            'is_active'     => 'required|boolean',
         ]);
 
         Service::create($request->all());
@@ -49,12 +79,12 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $request->validate([
-            'nama_layanan'   => 'required|max:100',
-            'jenis_layanan'  => 'required|max:100',
-            'harga_per_kg'   => 'required|numeric',
-            'estimasi_hari'  => 'required|integer',
-            'deskripsi'      => 'nullable',
-            'is_active'      => 'required|boolean',
+            'nama_layanan'  => 'required|max:100',
+            'jenis_layanan' => 'required|max:100',
+            'harga_per_kg'  => 'required|numeric',
+            'estimasi_hari' => 'required|integer',
+            'deskripsi'     => 'nullable',
+            'is_active'     => 'required|boolean',
         ]);
 
         $service->update($request->all());
