@@ -4,17 +4,7 @@
 
 @section('content')
 
-<div class="flex justify-between items-center mb-6">
-    <div>
-        <h2 class="text-2xl font-bold text-gray-800">
-            Data Service
-        </h2>
-
-        <p class="text-gray-500">
-            Kelola seluruh layanan CleanGo Laundry.
-        </p>
-    </div>
-
+<div class="flex justify-end mb-6">
     <a href="{{ route('services.create') }}"
         class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl shadow">
         + Tambah Service
@@ -27,7 +17,6 @@
 </div>
 @endif
 
-{{-- Search & Filter --}}
 <div class="bg-white rounded-2xl shadow p-5 mb-6">
     <form method="GET" action="{{ route('services.index') }}">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -154,8 +143,7 @@
                             Edit
                         </a>
 
-                        <form action="{{ route('services.destroy', $service) }}"
-                            method="POST">
+                        <form action="{{ route('services.destroy', $service) }}" method="POST">
 
                             @csrf
                             @method('DELETE')
