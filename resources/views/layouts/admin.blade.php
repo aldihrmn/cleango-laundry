@@ -37,16 +37,16 @@
             </a>
 
             <a href="{{ route('orders.index') }}"
-                class="block px-6 py-3 hover:bg-blue-700 transition">
+               class="block px-6 py-3 hover:bg-blue-700 transition">
                 📦 Order
             </a>
 
             <a href="{{ route('payments.index') }}"
-                class="block px-6 py-3 hover:bg-blue-700 transition">
-                 💳 Pembayaran
+               class="block px-6 py-3 hover:bg-blue-700 transition">
+                💳 Pembayaran
             </a>
 
-            <a href="#"
+            <a href="{{ route('reports.index') }}"
                class="block px-6 py-3 hover:bg-blue-700 transition">
                 📄 Laporan
             </a>
