@@ -4,72 +4,119 @@
 
 @section('content')
 
-<div class="flex justify-between items-center mb-6">
+{{-- ================= Statistik ================= --}}
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
 
-    <div>
+    <div class="bg-white rounded-2xl shadow p-6">
+        <p class="text-gray-500">Total Customer</p>
+        <h2 class="text-3xl font-bold text-blue-600 mt-2">
+            {{ $totalUser }}
+        </h2>
+    </div>
 
-        <p class="text-gray-500 text-sm">
-            Laporan keseluruhan CleanGo Laundry.
-        </p>
+    <div class="bg-white rounded-2xl shadow p-6">
+        <p class="text-gray-500">Total Order</p>
+        <h2 class="text-3xl font-bold text-green-600 mt-2">
+            {{ $totalOrder }}
+        </h2>
+    </div>
 
+    <div class="bg-white rounded-2xl shadow p-6">
+        <p class="text-gray-500">Order Selesai</p>
+        <h2 class="text-3xl font-bold text-yellow-500 mt-2">
+            {{ $orderSelesai }}
+        </h2>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow p-6">
+        <p class="text-gray-500">Total Pendapatan</p>
+        <h2 class="text-3xl font-bold text-red-500 mt-2">
+            Rp {{ number_format($totalPendapatan,0,',','.') }}
+        </h2>
     </div>
 
 </div>
 
-{{-- Filter --}}
+{{-- ================= Filter ================= --}}
+<div class="bg-white rounded-2xl shadow p-6 mb-6">
 
-<div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+    <form method="GET" action="{{ route('reports.index') }}">
 
-    <form action="{{ route('reports.index') }}" method="GET">
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
 
-        <div class="grid md:grid-cols-4 gap-4 items-end">
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Cari kode order / customer..."
+                class="border rounded-lg px-4 py-2">
 
-            <div>
+            <input
+                type="date"
+                name="tanggal_awal"
+                value="{{ request('tanggal_awal') }}"
+                class="border rounded-lg px-4 py-2">
 
-                <label class="block text-sm font-semibold mb-2">
-                    Tanggal Awal
-                </label>
+            <input
+                type="date"
+                name="tanggal_akhir"
+                value="{{ request('tanggal_akhir') }}"
+                class="border rounded-lg px-4 py-2">
 
-                <input
-                    type="date"
-                    name="tanggal_awal"
-                    value="{{ request('tanggal_awal') }}"
-                    class="w-full border rounded-xl px-4 py-3">
+            <select
+                name="status"
+                class="border rounded-lg px-4 py-2">
 
-            </div>
+                <option value="">Semua Status</option>
 
-            <div>
+                @foreach($statusList as $status)
 
-                <label class="block text-sm font-semibold mb-2">
-                    Tanggal Akhir
-                </label>
+                    <option
+                        value="{{ $status }}"
+                        {{ request('status')==$status ? 'selected':'' }}>
 
-                <input
-                    type="date"
-                    name="tanggal_akhir"
-                    value="{{ request('tanggal_akhir') }}"
-                    class="w-full border rounded-xl px-4 py-3">
+                        {{ $status }}
 
-            </div>
+                    </option>
 
-            <div>
+                @endforeach
+
+            </select>
+
+            <select
+                name="metode"
+                class="border rounded-lg px-4 py-2">
+
+                <option value="">Semua Metode</option>
+
+                @foreach($metodeList as $metode)
+
+                    <option
+                        value="{{ $metode }}"
+                        {{ request('metode')==$metode ? 'selected':'' }}>
+
+                        {{ $metode }}
+
+                    </option>
+
+                @endforeach
+
+            </select>
+
+            <div class="flex gap-2">
 
                 <button
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl">
+                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
 
                     Filter
 
                 </button>
 
-            </div>
-
-            <div>
-
                 <a
-                    href="{{ route('reports.pdf', request()->query()) }}"
-                    class="block text-center bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl">
+                    href="{{ route('reports.index') }}"
+                    class="flex-1 bg-gray-500 hover:bg-gray-600 text-white rounded-lg flex items-center justify-center">
 
-                    Download PDF
+                    Reset
 
                 </a>
 
@@ -81,181 +128,119 @@
 
 </div>
 
-{{-- Statistik --}}
+{{-- ================= Export ================= --}}
+<div class="flex justify-end mb-5">
 
-<div class="grid md:grid-cols-4 gap-6 mb-6">
+    <a
+        href="{{ route('reports.pdf', request()->query()) }}"
+        class="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-xl shadow">
 
-    <div class="bg-white rounded-2xl shadow p-6">
+        Export PDF
 
-        <p class="text-gray-500">
-            Total Customer
-        </p>
-
-        <h2 class="text-4xl font-bold text-blue-600 mt-2">
-
-            {{ $totalUser }}
-
-        </h2>
-
-    </div>
-
-    <div class="bg-white rounded-2xl shadow p-6">
-
-        <p class="text-gray-500">
-            Total Order
-        </p>
-
-        <h2 class="text-4xl font-bold text-green-600 mt-2">
-
-            {{ $totalOrder }}
-
-        </h2>
-
-    </div>
-
-    <div class="bg-white rounded-2xl shadow p-6">
-
-        <p class="text-gray-500">
-            Order Selesai
-        </p>
-
-        <h2 class="text-4xl font-bold text-yellow-500 mt-2">
-
-            {{ $orderSelesai }}
-
-        </h2>
-
-    </div>
-
-    <div class="bg-white rounded-2xl shadow p-6">
-
-        <p class="text-gray-500">
-            Pendapatan
-        </p>
-
-        <h2 class="text-2xl font-bold text-red-600 mt-2">
-
-            Rp {{ number_format($totalPendapatan,0,',','.') }}
-
-        </h2>
-
-    </div>
+    </a>
 
 </div>
 
-{{-- Tabel --}}
+{{-- ================= Table ================= --}}
+<div class="bg-white rounded-2xl shadow overflow-hidden">
 
-<div class="bg-white rounded-2xl shadow-lg overflow-x-auto">
+<table class="min-w-full">
 
-    <table class="w-full">
+<thead class="bg-blue-600 text-white">
 
-        <thead class="bg-blue-600 text-white">
+<tr>
 
-            <tr>
+<th class="px-5 py-4 text-left">No</th>
 
-                <th class="px-5 py-4 text-left">
-                    Kode
-                </th>
+<th class="px-5 py-4 text-left">Kode Order</th>
 
-                <th class="px-5 py-4 text-left">
-                    Customer
-                </th>
+<th class="px-5 py-4 text-left">Customer</th>
 
-                <th class="px-5 py-4 text-center">
-                    Tanggal
-                </th>
+<th class="px-5 py-4 text-left">Tanggal</th>
 
-                <th class="px-5 py-4 text-center">
-                    Status
-                </th>
+<th class="px-5 py-4 text-left">Status</th>
 
-                <th class="px-5 py-4 text-right">
-                    Total
-                </th>
+<th class="px-5 py-4 text-left">Metode</th>
 
-            </tr>
+<th class="px-5 py-4 text-right">Total</th>
 
-        </thead>
+</tr>
 
-        <tbody>
+</thead>
 
-            @forelse($orders as $order)
+<tbody>
 
-            <tr class="border-b hover:bg-blue-50">
+@forelse($orders as $order)
 
-                <td class="px-5 py-4 font-semibold">
+<tr class="border-b hover:bg-gray-50">
 
-                    {{ $order->kode_order }}
+<td class="px-5 py-4">
 
-                </td>
+{{ $orders->firstItem()+$loop->index }}
 
-                <td class="px-5 py-4">
+</td>
 
-                    {{ $order->user->name }}
+<td class="px-5 py-4 font-semibold">
 
-                </td>
+{{ $order->kode_order }}
 
-                <td class="px-5 py-4 text-center">
+</td>
 
-                    {{ \Carbon\Carbon::parse($order->tanggal_order)->format('d M Y') }}
+<td class="px-5 py-4">
 
-                </td>
+{{ $order->user->name }}
 
-                <td class="px-5 py-4 text-center">
+</td>
 
-                    @if($order->status=='Selesai')
+<td class="px-5 py-4">
 
-                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+{{ \Carbon\Carbon::parse($order->tanggal_order)->format('d-m-Y') }}
 
-                            {{ $order->status }}
+</td>
 
-                        </span>
+<td class="px-5 py-4">
 
-                    @elseif($order->status=='Diproses')
+{{ $order->status }}
 
-                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+</td>
 
-                            {{ $order->status }}
+<td class="px-5 py-4">
 
-                        </span>
+{{ optional($order->payment)->metode ?? '-' }}
 
-                    @else
+</td>
 
-                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+<td class="px-5 py-4 text-right">
 
-                            {{ $order->status }}
+Rp {{ number_format($order->total_harga,0,',','.') }}
 
-                        </span>
+</td>
 
-                    @endif
+</tr>
 
-                </td>
+@empty
 
-                <td class="px-5 py-4 text-right font-semibold">
+<tr>
 
-                    Rp {{ number_format($order->total_harga,0,',','.') }}
+<td colspan="7" class="text-center py-8 text-gray-500">
 
-                </td>
+Tidak ada data laporan.
 
-            </tr>
+</td>
 
-            @empty
+</tr>
 
-            <tr>
+@endforelse
 
-                <td colspan="5" class="text-center py-8 text-gray-500">
+</tbody>
 
-                    Tidak ada data.
+</table>
 
-                </td>
+</div>
 
-            </tr>
+<div class="mt-6">
 
-            @endforelse
-
-        </tbody>
-
-    </table>
+{{ $orders->links() }}
 
 </div>
 
