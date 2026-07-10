@@ -4,41 +4,29 @@
 
 @section('content')
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="flex justify-between items-center mb-6">
 
-    <div class="bg-white shadow rounded-lg p-6 border-l-4 border-blue-500">
-        <p class="text-gray-500">Total User</p>
-        <h2 class="text-3xl font-bold">{{ $totalUser }}</h2>
-    </div>
+    <div>
 
-    <div class="bg-white shadow rounded-lg p-6 border-l-4 border-green-500">
-        <p class="text-gray-500">Total Order</p>
-        <h2 class="text-3xl font-bold">{{ $totalOrder }}</h2>
-    </div>
+        <p class="text-gray-500 text-sm">
+            Laporan keseluruhan CleanGo Laundry.
+        </p>
 
-    <div class="bg-white shadow rounded-lg p-6 border-l-4 border-yellow-500">
-        <p class="text-gray-500">Order Selesai</p>
-        <h2 class="text-3xl font-bold">{{ $orderSelesai }}</h2>
-    </div>
-
-    <div class="bg-white shadow rounded-lg p-6 border-l-4 border-red-500">
-        <p class="text-gray-500">Pendapatan</p>
-        <h2 class="text-3xl font-bold">
-            Rp {{ number_format($totalPendapatan,0,',','.') }}
-        </h2>
     </div>
 
 </div>
 
-<!-- Filter -->
-<div class="bg-white shadow rounded-lg p-5 mb-6">
+{{-- Filter --}}
+
+<div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
 
     <form action="{{ route('reports.index') }}" method="GET">
 
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div class="grid md:grid-cols-4 gap-4 items-end">
 
             <div>
-                <label class="block font-medium mb-2">
+
+                <label class="block text-sm font-semibold mb-2">
                     Tanggal Awal
                 </label>
 
@@ -46,11 +34,13 @@
                     type="date"
                     name="tanggal_awal"
                     value="{{ request('tanggal_awal') }}"
-                    class="w-full border rounded p-2">
+                    class="w-full border rounded-xl px-4 py-3">
+
             </div>
 
             <div>
-                <label class="block font-medium mb-2">
+
+                <label class="block text-sm font-semibold mb-2">
                     Tanggal Akhir
                 </label>
 
@@ -58,29 +48,31 @@
                     type="date"
                     name="tanggal_akhir"
                     value="{{ request('tanggal_akhir') }}"
-                    class="w-full border rounded p-2">
+                    class="w-full border rounded-xl px-4 py-3">
+
             </div>
 
-            <div class="flex items-end">
+            <div>
+
                 <button
-                    type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded w-full">
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl">
+
                     Filter
+
                 </button>
+
             </div>
 
-            <div class="flex items-end">
-                <a href="{{ route('reports.index') }}"
-                   class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded w-full text-center">
-                    Reset
-                </a>
-            </div>
+            <div>
 
-            <div class="flex items-end">
-                <a href="{{ route('reports.pdf', request()->query()) }}"
-                   class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded w-full text-center">
-                    Export PDF
+                <a
+                    href="{{ route('reports.pdf', request()->query()) }}"
+                    class="block text-center bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl">
+
+                    Download PDF
+
                 </a>
+
             </div>
 
         </div>
@@ -89,78 +81,177 @@
 
 </div>
 
-<!-- Tabel -->
-<div class="bg-white shadow rounded-lg overflow-hidden">
+{{-- Statistik --}}
 
-    <div class="p-5 border-b">
-        <h2 class="text-xl font-bold">
-            Data Laporan Order
+<div class="grid md:grid-cols-4 gap-6 mb-6">
+
+    <div class="bg-white rounded-2xl shadow p-6">
+
+        <p class="text-gray-500">
+            Total Customer
+        </p>
+
+        <h2 class="text-4xl font-bold text-blue-600 mt-2">
+
+            {{ $totalUser }}
+
         </h2>
+
     </div>
+
+    <div class="bg-white rounded-2xl shadow p-6">
+
+        <p class="text-gray-500">
+            Total Order
+        </p>
+
+        <h2 class="text-4xl font-bold text-green-600 mt-2">
+
+            {{ $totalOrder }}
+
+        </h2>
+
+    </div>
+
+    <div class="bg-white rounded-2xl shadow p-6">
+
+        <p class="text-gray-500">
+            Order Selesai
+        </p>
+
+        <h2 class="text-4xl font-bold text-yellow-500 mt-2">
+
+            {{ $orderSelesai }}
+
+        </h2>
+
+    </div>
+
+    <div class="bg-white rounded-2xl shadow p-6">
+
+        <p class="text-gray-500">
+            Pendapatan
+        </p>
+
+        <h2 class="text-2xl font-bold text-red-600 mt-2">
+
+            Rp {{ number_format($totalPendapatan,0,',','.') }}
+
+        </h2>
+
+    </div>
+
+</div>
+
+{{-- Tabel --}}
+
+<div class="bg-white rounded-2xl shadow-lg overflow-x-auto">
 
     <table class="w-full">
 
-        <thead class="bg-gray-100">
+        <thead class="bg-blue-600 text-white">
 
             <tr>
-                <th class="border p-3">No</th>
-                <th class="border p-3">Kode Order</th>
-                <th class="border p-3">Customer</th>
-                <th class="border p-3">Tanggal</th>
-                <th class="border p-3">Status</th>
-                <th class="border p-3">Pickup</th>
-                <th class="border p-3">Total</th>
+
+                <th class="px-5 py-4 text-left">
+                    Kode
+                </th>
+
+                <th class="px-5 py-4 text-left">
+                    Customer
+                </th>
+
+                <th class="px-5 py-4 text-center">
+                    Tanggal
+                </th>
+
+                <th class="px-5 py-4 text-center">
+                    Status
+                </th>
+
+                <th class="px-5 py-4 text-right">
+                    Total
+                </th>
+
             </tr>
 
         </thead>
 
         <tbody>
 
-        @forelse($orders as $order)
+            @forelse($orders as $order)
 
-            <tr>
+            <tr class="border-b hover:bg-blue-50">
 
-                <td class="border p-3 text-center">
-                    {{ $loop->iteration }}
-                </td>
+                <td class="px-5 py-4 font-semibold">
 
-                <td class="border p-3">
                     {{ $order->kode_order }}
+
                 </td>
 
-                <td class="border p-3">
+                <td class="px-5 py-4">
+
                     {{ $order->user->name }}
+
                 </td>
 
-                <td class="border p-3">
-                    {{ $order->tanggal_order }}
+                <td class="px-5 py-4 text-center">
+
+                    {{ \Carbon\Carbon::parse($order->tanggal_order)->format('d M Y') }}
+
                 </td>
 
-                <td class="border p-3">
-                    {{ $order->status }}
+                <td class="px-5 py-4 text-center">
+
+                    @if($order->status=='Selesai')
+
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+
+                            {{ $order->status }}
+
+                        </span>
+
+                    @elseif($order->status=='Diproses')
+
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+
+                            {{ $order->status }}
+
+                        </span>
+
+                    @else
+
+                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+
+                            {{ $order->status }}
+
+                        </span>
+
+                    @endif
+
                 </td>
 
-                <td class="border p-3">
-                    {{ $order->pickup_type }}
-                </td>
+                <td class="px-5 py-4 text-right font-semibold">
 
-                <td class="border p-3">
                     Rp {{ number_format($order->total_harga,0,',','.') }}
+
                 </td>
 
             </tr>
 
-        @empty
+            @empty
 
             <tr>
 
-                <td colspan="7" class="text-center p-5">
-                    Belum ada data order.
+                <td colspan="5" class="text-center py-8 text-gray-500">
+
+                    Tidak ada data.
+
                 </td>
 
             </tr>
 
-        @endforelse
+            @endforelse
 
         </tbody>
 
