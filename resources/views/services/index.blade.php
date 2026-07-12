@@ -4,115 +4,182 @@
 
 @section('content')
 
-<div class="flex justify-between items-center mb-6">
-
-    <h2 class="text-xl font-bold">
-        Daftar Service
-    </h2>
-
+<div class="flex justify-end mb-6">
     <a href="{{ route('services.create') }}"
-       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl shadow">
         + Tambah Service
     </a>
-
 </div>
 
 @if(session('success'))
-<div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+<div class="bg-green-100 border border-green-300 text-green-700 rounded-xl px-4 py-3 mb-5">
     {{ session('success') }}
 </div>
 @endif
 
-<div class="bg-white shadow rounded-lg overflow-hidden">
+<div class="bg-white rounded-2xl shadow p-5 mb-6">
+    <form method="GET" action="{{ route('services.index') }}">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
-    <table class="w-full">
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Cari nama layanan..."
+                class="w-full border rounded-lg px-4 py-2">
 
-        <thead class="bg-gray-100">
+            <select
+                name="jenis_layanan"
+                class="w-full border rounded-lg px-4 py-2">
+
+                <option value="">Semua Jenis</option>
+
+                @foreach($jenisLayanan as $jenis)
+                    <option value="{{ $jenis }}"
+                        {{ request('jenis_layanan') == $jenis ? 'selected' : '' }}>
+                        {{ $jenis }}
+                    </option>
+                @endforeach
+
+            </select>
+
+            <select
+                name="status"
+                class="w-full border rounded-lg px-4 py-2">
+
+                <option value="">Semua Status</option>
+
+                <option value="1"
+                    {{ request('status') === '1' ? 'selected' : '' }}>
+                    Aktif
+                </option>
+
+                <option value="0"
+                    {{ request('status') === '0' ? 'selected' : '' }}>
+                    Tidak Aktif
+                </option>
+
+            </select>
+
+            <div class="flex gap-2">
+
+                <button
+                    type="submit"
+                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2">
+                    Filter
+                </button>
+
+                <a
+                    href="{{ route('services.index') }}"
+                    class="flex-1 bg-gray-500 hover:bg-gray-600 text-white rounded-lg flex items-center justify-center">
+                    Reset
+                </a>
+
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<div class="bg-white rounded-2xl shadow overflow-hidden">
+
+    <table class="min-w-full">
+
+        <thead class="bg-blue-600 text-white">
             <tr>
-                <th class="p-3 border">No</th>
-                <th class="p-3 border">Nama Layanan</th>
-                <th class="p-3 border">Jenis</th>
-                <th class="p-3 border">Harga/Kg</th>
-                <th class="p-3 border">Estimasi</th>
-                <th class="p-3 border">Status</th>
-                <th class="p-3 border">Aksi</th>
+                <th class="px-5 py-4 text-left">No</th>
+                <th class="px-5 py-4 text-left">Nama Layanan</th>
+                <th class="px-5 py-4 text-left">Jenis</th>
+                <th class="px-5 py-4 text-left">Harga / Kg</th>
+                <th class="px-5 py-4 text-left">Estimasi</th>
+                <th class="px-5 py-4 text-center">Status</th>
+                <th class="px-5 py-4 text-center">Aksi</th>
             </tr>
         </thead>
 
         <tbody>
 
-        @forelse($services as $service)
+            @forelse($services as $service)
 
-            <tr>
+            <tr class="border-b hover:bg-gray-50">
 
-                <td class="p-3 border text-center">
-                    {{ $loop->iteration }}
+                <td class="px-5 py-4">
+                    {{ $services->firstItem() + $loop->index }}
                 </td>
 
-                <td class="p-3 border">
+                <td class="px-5 py-4 font-semibold">
                     {{ $service->nama_layanan }}
                 </td>
 
-                <td class="p-3 border">
+                <td class="px-5 py-4">
                     {{ $service->jenis_layanan }}
                 </td>
 
-                <td class="p-3 border">
+                <td class="px-5 py-4">
                     Rp {{ number_format($service->harga_per_kg,0,',','.') }}
                 </td>
 
-                <td class="p-3 border">
+                <td class="px-5 py-4">
                     {{ $service->estimasi_hari }} Hari
                 </td>
 
-                <td class="p-3 border">
-                    {{ $service->is_active ? 'Aktif' : 'Tidak Aktif' }}
+                <td class="px-5 py-4 text-center">
+                    @if($service->is_active)
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                            Aktif
+                        </span>
+                    @else
+                        <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
+                            Tidak Aktif
+                        </span>
+                    @endif
                 </td>
 
-                <td class="p-3 border text-center">
+                <td class="px-5 py-4">
+                    <div class="flex justify-center gap-2">
 
-                    <a href="{{ route('services.edit',$service->id) }}"
-                       class="bg-yellow-500 text-white px-3 py-1 rounded">
-                        Edit
-                    </a>
+                        <a href="{{ route('services.edit', $service) }}"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
+                            Edit
+                        </a>
 
-                    <form action="{{ route('services.destroy',$service->id) }}"
-                          method="POST"
-                          class="inline">
+                        <form action="{{ route('services.destroy', $service) }}" method="POST">
 
-                        @csrf
-                        @method('DELETE')
+                            @csrf
+                            @method('DELETE')
 
-                        <button
-                            onclick="return confirm('Hapus layanan ini?')"
-                            class="bg-red-600 text-white px-3 py-1 rounded">
+                            <button
+                                type="submit"
+                                onclick="return confirm('Yakin ingin menghapus layanan ini?')"
+                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+                                Hapus
+                            </button>
 
-                            Hapus
+                        </form>
 
-                        </button>
-
-                    </form>
-
+                    </div>
                 </td>
 
             </tr>
 
-        @empty
+            @empty
 
             <tr>
-
-                <td colspan="7" class="text-center p-5">
-                    Belum ada data service
+                <td colspan="7" class="text-center py-8 text-gray-500">
+                    Data service tidak ditemukan.
                 </td>
-
             </tr>
 
-        @endforelse
+            @endforelse
 
         </tbody>
 
     </table>
 
+</div>
+
+<div class="mt-6">
+    {{ $services->links() }}
 </div>
 
 @endsection

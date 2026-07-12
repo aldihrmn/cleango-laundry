@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
+use App\Models\User;
 use App\Models\Service;
+use App\Models\Order;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $totalCustomer = Customer::count();
+        $totalUser = User::count();
         $totalService = Service::count();
-
-        // Nanti akan dipakai setelah fitur Order selesai
-        $totalOrder = 0;
-        $totalRevenue = 0;
+        $totalOrder = Order::count();
+        $totalRevenue = Order::sum('total_harga');
 
         return view('dashboard', compact(
-            'totalCustomer',
+            'totalUser',
             'totalService',
             'totalOrder',
             'totalRevenue'
