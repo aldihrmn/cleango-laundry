@@ -9,7 +9,6 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\ReportController;
 use App\Http\Middleware\CustomerOnly;
 
 Route::get('/', function () {
@@ -43,6 +42,8 @@ Route::middleware(['auth'])->group(function () {
     // Payments
     Route::resource('payments', PaymentController::class)
         ->except(['create', 'store', 'edit', 'update']);
+
+
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
