@@ -31,6 +31,7 @@
                 <label class="block mb-1">Estimasi Selesai</label>
                 <input type="date" name="estimasi_selesai" class="w-full border rounded px-3 py-2" value="{{ $order->estimasi_selesai }}" required>
             </div>
+<<<<<<< Updated upstream
             <div>
                 <label class="block mb-1">Status</label>
                 <select name="status" class="w-full border rounded px-3 py-2">
@@ -39,6 +40,44 @@
                     @endforeach
                 </select>
             </div>
+=======
+
+            @if(optional(auth()->user())->hasRole('admin'))
+                <div>
+
+                    <label class="block font-semibold mb-2">
+                        Status
+                    </label>
+
+                    <select
+                        name="status"
+                        class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+
+                        @foreach(['Menunggu','Diproses','Dicuci','Dikeringkan','Disetrika','Selesai','Diambil'] as $status)
+
+                            <option value="{{ $status }}" {{ $order->status == $status ? 'selected' : '' }}>
+
+                                {{ $status }}
+
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
+            @else
+                <div>
+                    <label class="block font-semibold mb-2">Status</label>
+                    <input
+                        type="text"
+                        value="{{ $order->status }}"
+                        class="w-full border rounded-xl px-4 py-3 bg-gray-100 text-gray-700"
+                        readonly>
+                </div>
+            @endif
+
+>>>>>>> Stashed changes
             <div>
                 <label class="block mb-1">Pickup Type</label>
                 <select name="pickup_type" class="w-full border rounded px-3 py-2">
@@ -47,6 +86,7 @@
                     @endforeach
                 </select>
             </div>
+<<<<<<< Updated upstream
             <div>
                 <label class="block mb-1">Total Harga</label>
                 <input type="number" name="total_harga" class="w-full border rounded px-3 py-2" value="{{ $order->total_harga }}" required>
@@ -55,6 +95,48 @@
                 <label class="block mb-1">Catatan</label>
                 <textarea name="catatan" class="w-full border rounded px-3 py-2">{{ $order->catatan }}</textarea>
             </div>
+=======
+
+            @if(optional(auth()->user())->hasRole('admin'))
+                <div class="md:col-span-2">
+
+                    <label class="block font-semibold mb-2">
+                        Total Harga
+                    </label>
+
+                    <input
+                        type="number"
+                        name="total_harga"
+                        value="{{ old('total_harga', $order->total_harga) }}"
+                        class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        required>
+
+                </div>
+            @else
+                <div class="md:col-span-2">
+                    <label class="block font-semibold mb-2">Total Harga</label>
+                    <input
+                        type="text"
+                        value="Rp {{ number_format($order->total_harga, 0, ',', '.') }}"
+                        class="w-full border rounded-xl px-4 py-3 bg-gray-100 text-gray-700"
+                        readonly>
+                </div>
+            @endif
+
+            <div class="md:col-span-2">
+
+                <label class="block font-semibold mb-2">
+                    Catatan
+                </label>
+
+                <textarea
+                    name="catatan"
+                    rows="4"
+                    class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">{{ old('catatan', $order->catatan) }}</textarea>
+
+            </div>
+
+>>>>>>> Stashed changes
         </div>
 
         <div class="mt-6 flex gap-2">

@@ -2,61 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $payments = Payment::with('order.user')->latest()->get();
+        $query = Payment::with('order.user');
+
+        if ($request->filled('search')) {
+            $query->whereHas('order', function ($orderQuery) use ($request) {
+                $orderQuery->where('kode_order', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status_pembayaran', $request->status);
+        }
+
+        if ($request->filled('tanggal')) {
+            $query->whereDate('tanggal_bayar', $request->tanggal);
+        }
+
+        $payments = $query->orderBy('tanggal_bayar', 'desc')->get();
 
         return view('payments.index', compact('payments'));
-    }
-
-    public function create()
-    {
-        $orders = Order::all();
-
-        return view('payments.create', compact('orders'));
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'order_id' => 'required|exists:orders,id',
-            'metode' => 'required|in:Cash,Transfer,QRIS,E-Wallet',
-            'jumlah' => 'required|numeric',
-            'status_pembayaran' => 'required|in:Pending,Lunas,Gagal',
-            'tanggal_bayar' => 'nullable|date',
-        ]);
-
-        Payment::create($validated);
-
-        return redirect()->route('payments.index')->with('success', 'Pembayaran berhasil ditambahkan.');
-    }
-
-    public function edit(Payment $payment)
-    {
-        $orders = Order::all();
-
-        return view('payments.edit', compact('payment', 'orders'));
-    }
-
-    public function update(Request $request, Payment $payment)
-    {
-        $validated = $request->validate([
-            'order_id' => 'required|exists:orders,id',
-            'metode' => 'required|in:Cash,Transfer,QRIS,E-Wallet',
-            'jumlah' => 'required|numeric',
-            'status_pembayaran' => 'required|in:Pending,Lunas,Gagal',
-            'tanggal_bayar' => 'nullable|date',
-        ]);
-
-        $payment->update($validated);
-
-        return redirect()->route('payments.index')->with('success', 'Pembayaran berhasil diperbarui.');
     }
 
     public function destroy(Payment $payment)

@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\AdminOnly;
 use App\Models\Service;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
-    public function index()
+    public function __construct()
+    {
+        $this->middleware(AdminOnly::class)
+            ->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
+
+    public function index(Request $request)
     {
         $services = Service::latest()->get();
 
