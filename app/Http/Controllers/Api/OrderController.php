@@ -181,7 +181,7 @@ class OrderController extends Controller
     public function pay(Request $request, $id): JsonResponse
     {
         $validated = $request->validate([
-            'metode' => ['required', 'string', 'in:Cash,Transfer,QRIS,E-Wallet'],
+            'metode' => ['required', 'string', 'in:Cash,QRIS'],
         ]);
 
         $order = Order::find($id);

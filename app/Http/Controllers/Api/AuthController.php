@@ -62,6 +62,15 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $credentials['email'])->firstOrFail();
+
+        if (! $user->hasRole('customer')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun ini tidak memiliki akses ke aplikasi mobile',
+                'data' => null,
+            ], 403);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([

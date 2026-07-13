@@ -6,6 +6,10 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ServiceController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/assets/qris', function () {
+    return response()->file(public_path('images/QRIS.png'));
+});
+
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
