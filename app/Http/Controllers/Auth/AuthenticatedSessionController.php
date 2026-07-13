@@ -24,11 +24,27 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+    $request->authenticate();
 
-        $request->session()->regenerate();
+    $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+    // Ambil user yang baru login
+    $user = Auth::user();
+
+    // Tolak customer login ke web
+    if ($user instanceof \App\Models\User && $user->hasRole('customer')) {
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return back()->withErrors([
+            'email' => 'Customer hanya dapat login melalui aplikasi mobile.',
+        ]);
+    }
+
+    return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**
