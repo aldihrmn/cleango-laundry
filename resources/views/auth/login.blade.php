@@ -144,6 +144,7 @@
 
                 </label>
 
+                {{-- Lupa Password
                 @if (Route::has('password.request'))
 
                     <a
@@ -154,7 +155,7 @@
 
                     </a>
 
-                @endif
+                @endif --}}
 
             </div>
 
@@ -169,7 +170,7 @@
 
         </form>
 
-        <!-- Register -->
+        {{-- <!-- Register-->
         <div class="mt-8 text-center text-gray-600">
 
             Belum punya akun?
@@ -182,7 +183,7 @@
 
             </a>
 
-        </div>
+        </div>  --}}
 
     </div>
 
