@@ -193,18 +193,56 @@ class OrderController extends Controller
             ], 404);
         }
 
+        $isCash = $validated['metode'] === 'Cash';
+
         $payment = Payment::create([
             'order_id' => $order->id,
             'metode' => $validated['metode'],
             'jumlah' => $order->total_harga,
-            'status_pembayaran' => 'Lunas',
-            'tanggal_bayar' => now(),
+            'status_pembayaran' => $isCash ? 'Lunas' : 'Pending',
+            'tanggal_bayar' => $isCash ? now() : null,
         ]);
 
         return response()->json([
             'success' => true,
             'data' => $payment,
         ], 201);
+    }
+
+    /**
+     * Confirm the latest payment of the specified order as paid.
+     */
+    public function confirmPayment(Request $request, $id): JsonResponse
+    {
+        $order = Order::find($id);
+
+        if (! $order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order tidak ditemukan',
+            ], 404);
+        }
+
+        $payment = Payment::where('order_id', $order->id)->latest()->first();
+
+        if (! $payment) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Belum ada pembayaran untuk order ini',
+            ], 404);
+        }
+
+        if ($payment->status_pembayaran !== 'Lunas') {
+            $payment->update([
+                'status_pembayaran' => 'Lunas',
+                'tanggal_bayar' => now(),
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $payment,
+        ]);
     }
 
     /**

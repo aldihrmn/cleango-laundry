@@ -20,3 +20,4 @@ Route::get('/orders', [OrderController::class, 'index'])->middleware('auth:sanct
 Route::get('/orders/{id}', [OrderController::class, 'show'])->middleware('auth:sanctum');
 Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus'])->middleware('auth:sanctum');
 Route::post('/orders/{id}/payment', [OrderController::class, 'pay'])->middleware('auth:sanctum');
+Route::patch('/orders/{id}/payment/confirm', [OrderController::class, 'confirmPayment'])->middleware('auth:sanctum');
