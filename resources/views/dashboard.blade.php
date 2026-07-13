@@ -176,7 +176,7 @@
 
             </a>
 
-            <a href="{{ route('orders.index') }}"
+            <a href="{{ auth()->user()->hasRole('customer') ? route('orders.create') : route('orders.index') }}"
                 class="bg-green-600 hover:bg-green-700 text-white rounded-2xl p-5 text-center transition">
 
                 <div class="text-4xl mb-2">📦</div>
@@ -204,7 +204,12 @@
             </a>
 
         </div>
-
+        <div class="mt-6">
+            <a href="{{ route('orders.create') }}"
+                class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl p-4 text-center font-semibold transition">
+                Buat Order
+            </a>
+        </div>
     </div>
 
     <!-- Informasi -->

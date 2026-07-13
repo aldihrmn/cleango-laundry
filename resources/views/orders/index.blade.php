@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="flex justify-between items-center mb-6">
+<div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mb-6">
 
     <div>
         <p class="text-gray-500 text-sm">
@@ -12,12 +12,37 @@
         </p>
     </div>
 
-    <a href="{{ route('orders.create') }}"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold shadow">
+    @if(auth()->user()->hasRole('customer'))
+        <a href="{{ route('orders.create') }}"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold shadow">
+            + Tambah Order
+        </a>
+    @endif
 
-        + Tambah Order
+    <form action="{{ route('orders.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-3 w-full lg:w-auto">
+        <input type="text" name="kode_order" value="{{ request('kode_order') }}" placeholder="Cari kode order"
+            class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
 
-    </a>
+        <input type="text" name="customer" value="{{ request('customer') }}" placeholder="Cari customer"
+            class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
+
+        <select name="status" class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
+            <option value="">Semua Status</option>
+            @foreach(['Menunggu','Diproses','Dicuci','Dikeringkan','Disetrika','Selesai','Diambil'] as $status)
+                <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ $status }}</option>
+            @endforeach
+        </select>
+
+        <select name="pickup_type" class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
+            <option value="">Semua Pickup</option>
+            <option value="Antar" {{ request('pickup_type') == 'Antar' ? 'selected' : '' }}>Antar</option>
+            <option value="Jemput" {{ request('pickup_type') == 'Jemput' ? 'selected' : '' }}>Jemput</option>
+        </select>
+
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold shadow">
+            Filter
+        </button>
+    </form>
 
 </div>
 
@@ -149,34 +174,34 @@
                 </td>
 
                 <td class="px-6 py-4">
+                    @if(auth()->user()->hasRole('admin'))
+                        <div class="flex justify-center gap-2">
 
-                    <div class="flex justify-center gap-2">
+                            <a href="{{ route('orders.edit',$order) }}"
+                                class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm">
 
-                        <a href="{{ route('orders.edit',$order) }}"
-                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm">
+                                Edit
 
-                            Edit
+                            </a>
 
-                        </a>
+                            <form action="{{ route('orders.destroy',$order) }}"
+                                method="POST">
 
-                        <form action="{{ route('orders.destroy',$order) }}"
-                            method="POST">
+                                @csrf
+                                @method('DELETE')
 
-                            @csrf
-                            @method('DELETE')
+                                <button
+                                    onclick="return confirm('Yakin ingin menghapus order ini?')"
+                                    class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm">
 
-                            <button
-                                onclick="return confirm('Yakin ingin menghapus order ini?')"
-                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm">
+                                    Hapus
 
-                                Hapus
+                                </button>
 
-                            </button>
+                            </form>
 
-                        </form>
-
-                    </div>
-
+                        </div>
+                    @endif
                 </td>
 
             </tr>

@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="flex justify-between items-center mb-6">
+<div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mb-6">
 
     <div>
         <p class="text-gray-500 text-sm">
@@ -12,12 +12,29 @@
         </p>
     </div>
 
-    <a href="{{ route('payments.create') }}"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold shadow">
+    <form action="{{ route('payments.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-3 w-full lg:w-auto">
+        <input type="text" name="kode_order" value="{{ request('kode_order') }}" placeholder="Cari kode order"
+            class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
 
-        + Tambah Payment
+        <input type="text" name="customer" value="{{ request('customer') }}" placeholder="Cari customer"
+            class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
 
-    </a>
+        <select name="metode" class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
+            <option value="">Semua Metode</option>
+            <option value="Cash" {{ request('metode') == 'Cash' ? 'selected' : '' }}>Tunai</option>
+            <option value="QRIS" {{ request('metode') == 'QRIS' ? 'selected' : '' }}>QRIS</option>
+        </select>
+
+        <select name="status_pembayaran" class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full">
+            <option value="">Semua Status</option>
+            <option value="Pending" {{ request('status_pembayaran') == 'Pending' ? 'selected' : '' }}>Pending</option>
+            <option value="Lunas" {{ request('status_pembayaran') == 'Lunas' ? 'selected' : '' }}>Lunas</option>
+        </select>
+
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold shadow">
+            Filter
+        </button>
+    </form>
 
 </div>
 
@@ -128,12 +145,14 @@
 
                     <div class="flex justify-center gap-2">
 
-                        <a href="{{ route('payments.edit',$payment) }}"
-                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm">
+                        @if(! auth()->user()->hasRole('admin'))
+                            <a href="{{ route('payments.edit',$payment) }}"
+                                class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm">
 
-                            Edit
+                                Edit
 
-                        </a>
+                            </a>
+                        @endif
 
                         <form action="{{ route('payments.destroy',$payment) }}" method="POST">
 

@@ -96,7 +96,7 @@
 
                 <p class="text-blue-200 text-sm">
 
-                    Administrator
+                    {{ Auth::user()->hasRole('admin') ? 'Administrator' : 'Customer' }}
 
                 </p>
 

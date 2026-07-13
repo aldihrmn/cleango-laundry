@@ -5,10 +5,12 @@
 @section('content')
 
 <div class="flex justify-end mb-6">
-    <a href="{{ route('services.create') }}"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl shadow">
-        + Tambah Service
-    </a>
+    @if(auth()->user()->hasRole('admin'))
+        <a href="{{ route('services.create') }}"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl shadow">
+            + Tambah Service
+        </a>
+    @endif
 </div>
 
 @if(session('success'))
@@ -136,28 +138,30 @@
                 </td>
 
                 <td class="px-5 py-4">
-                    <div class="flex justify-center gap-2">
+                    @if(auth()->user()->hasRole('admin'))
+                        <div class="flex justify-center gap-2">
 
-                        <a href="{{ route('services.edit', $service) }}"
-                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
-                            Edit
-                        </a>
+                            <a href="{{ route('services.edit', $service) }}"
+                                class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
+                                Edit
+                            </a>
 
-                        <form action="{{ route('services.destroy', $service) }}" method="POST">
+                            <form action="{{ route('services.destroy', $service) }}" method="POST">
 
-                            @csrf
-                            @method('DELETE')
+                                @csrf
+                                @method('DELETE')
 
-                            <button
-                                type="submit"
-                                onclick="return confirm('Yakin ingin menghapus layanan ini?')"
-                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
-                                Hapus
-                            </button>
+                                <button
+                                    type="submit"
+                                    onclick="return confirm('Yakin ingin menghapus layanan ini?')"
+                                    class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+                                    Hapus
+                                </button>
 
-                        </form>
+                            </form>
 
-                    </div>
+                        </div>
+                    @endif
                 </td>
 
             </tr>

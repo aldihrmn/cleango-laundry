@@ -71,7 +71,7 @@
                 </h3>
 
                 <p class="text-sm text-gray-500">
-                    Administrator
+                    {{ Auth::user()->hasRole('admin') ? 'Administrator' : 'Customer' }}
                 </p>
 
             </div>
