@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm \"d:/Semester VIII/PPBCS/cleango-laundry/app/Http/Controllers/Api/CustomerController.php\")"
+    ],
+    "additionalDirectories": [
+      "d:\\Semester VIII\\PPBCS\\cleango-laundry\\app\\Http\\Controllers\\Api"
+    ]
+  }
+}

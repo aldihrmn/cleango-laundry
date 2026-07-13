@@ -15,15 +15,31 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
+        public function run(): void
     {
-        $user = User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call(RoleSeeder::class);
+
+        // ADMIN
+        $admin = User::factory()->create([
+            'name' => 'Administrator',
+            'email' => 'admin@cleango.com',
+            'password' => bcrypt('password'),
         ]);
 
+        $admin->assignRole('admin');
+
+        // CUSTOMER
+        $customer = User::factory()->create([
+            'name' => 'Test Customer',
+            'email' => 'customer@cleango.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $customer->assignRole('customer');
+
+        // ORDER CUSTOMER
         $order1 = Order::create([
-            'user_id' => $user->id,
+            'user_id' => $customer->id,
             'kode_order' => 'ORD-001',
             'tanggal_order' => '2026-07-09',
             'status' => 'Menunggu',
@@ -34,7 +50,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $order2 = Order::create([
-            'user_id' => $user->id,
+            'user_id' => $customer->id,
             'kode_order' => 'ORD-002',
             'tanggal_order' => '2026-07-08',
             'status' => 'Selesai',

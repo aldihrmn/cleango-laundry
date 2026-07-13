@@ -54,37 +54,61 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
             <div>
-
                 <label class="block font-semibold mb-2">
-
                     Customer
-
                 </label>
-
-                <select
-                    name="user_id"
-                    class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-
-                    @foreach($users as $user)
-
-                        <option value="{{ $user->id }}">
-
-                            {{ $user->name }}
-
-                        </option>
-
-                    @endforeach
-
-                </select>
-
+                <div class="w-full border rounded-xl px-4 py-3 bg-gray-50 text-gray-700">
+                    {{ auth()->user()->name }}
+                </div>
             </div>
 
             <div>
-
                 <label class="block font-semibold mb-2">
+                    Layanan
+                </label>
+                <select
+                    name="service_id"
+                    class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    required>
+                    <option value="">Pilih Layanan</option>
+                    @foreach($services as $service)
+                        <option value="{{ $service->id }}" data-price="{{ $service->harga_per_kg }}" data-estimasi="{{ $service->estimasi_hari }}" {{ old('service_id') == $service->id ? 'selected' : '' }}>
+                            {{ $service->nama_layanan }} - Rp {{ number_format($service->harga_per_kg,0,',','.') }} /kg - Estimasi {{ $service->estimasi_hari }} hari
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
+            <div>
+                <label class="block font-semibold mb-2">
+                    Jumlah (Qty)
+                </label>
+                <input
+                    type="number"
+                    id="qty"
+                    name="qty"
+                    value="{{ old('qty', 1) }}"
+                    min="1"
+                    class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    required>
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">
+                    Berat (kg)
+                </label>
+                <input
+                    type="number"
+                    step="0.01"
+                    name="berat"
+                    value="{{ old('berat', 1) }}"
+                    min="0"
+                    class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">
                     Kode Order
-
                 </label>
 
                 <input
@@ -106,28 +130,25 @@
 
                 <input
                     type="date"
+                    id="tanggal_order"
                     name="tanggal_order"
-                    value="{{ old('tanggal_order') }}"
+                    value="{{ old('tanggal_order', date('Y-m-d')) }}"
                     class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                     required>
 
             </div>
 
             <div>
-
                 <label class="block font-semibold mb-2">
-
                     Estimasi Selesai
-
                 </label>
-
                 <input
-                    type="date"
-                    name="estimasi_selesai"
-                    value="{{ old('estimasi_selesai') }}"
-                    class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    required>
-
+                    type="text"
+                    id="estimasi_selesai_display"
+                    value=""
+                    class="w-full border rounded-xl px-4 py-3 bg-gray-100 text-gray-700 focus:outline-none"
+                    readonly>
+                <input type="hidden" name="estimasi_selesai" id="estimasi_selesai" value="">
             </div>
 
             <div>
@@ -175,28 +196,18 @@
             </div>
 
             <div class="md:col-span-2">
-
                 <label class="block font-semibold mb-2">
-
                     Total Harga
-
                 </label>
-
-                <input
-                    type="number"
-                    name="total_harga"
-                    value="{{ old('total_harga') }}"
-                    class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    required>
-
+                <div id="totalHargaDisplay" class="rounded-xl border border-gray-200 bg-gray-50 p-4 text-2xl font-bold text-green-700">
+                    Rp 0
+                </div>
+                <input type="hidden" name="total_harga" id="total_harga" value="{{ old('total_harga', 0) }}">
             </div>
 
             <div class="md:col-span-2">
-
                 <label class="block font-semibold mb-2">
-
                     Catatan
-
                 </label>
 
                 <textarea
@@ -231,5 +242,64 @@
     </form>
 
 </div>
+
+<script>
+    function calculateTotalHarga() {
+        const serviceSelect = document.querySelector('select[name="service_id"]');
+        const qtyInput = document.getElementById('qty');
+        const beratInput = document.querySelector('input[name="berat"]');
+        const tanggalOrderInput = document.getElementById('tanggal_order');
+        const totalHargaInput = document.getElementById('total_harga');
+        const totalHargaDisplay = document.getElementById('totalHargaDisplay');
+        const estimasiInput = document.getElementById('estimasi_selesai');
+        const estimasiDisplay = document.getElementById('estimasi_selesai_display');
+
+        const selectedOption = serviceSelect?.selectedOptions[0];
+        const pricePerKg = selectedOption ? Number(selectedOption.dataset.price || 0) : 0;
+        const estimasiHari = selectedOption ? Number(selectedOption.dataset.estimasi || 0) : 0;
+        const qty = Number(qtyInput?.value) || 1;
+        const berat = Number(beratInput?.value) || 1;
+        const total = pricePerKg * Math.max(berat, 1) * Math.max(qty, 1);
+        const tanggalOrder = tanggalOrderInput?.value ? new Date(tanggalOrderInput.value) : new Date();
+
+        if (totalHargaInput) {
+            totalHargaInput.value = total;
+        }
+        if (totalHargaDisplay) {
+            totalHargaDisplay.textContent = 'Rp ' + total.toLocaleString('id-ID');
+        }
+
+        if (estimasiInput && estimasiDisplay) {
+            if (selectedOption && estimasiHari > 0 && tanggalOrderInput?.value) {
+                const selesaiDate = new Date(tanggalOrder);
+                selesaiDate.setDate(selesaiDate.getDate() + estimasiHari);
+                const year = selesaiDate.getFullYear();
+                const month = String(selesaiDate.getMonth() + 1).padStart(2, '0');
+                const day = String(selesaiDate.getDate()).padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}`;
+                estimasiInput.value = formattedDate;
+                estimasiDisplay.value = `${day}/${month}/${year}`;
+            } else {
+                estimasiInput.value = '';
+                estimasiDisplay.value = '';
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const serviceSelect = document.querySelector('select[name="service_id"]');
+        const qtyInput = document.getElementById('qty');
+        const beratInput = document.querySelector('input[name="berat"]');
+
+        const tanggalOrderInput = document.getElementById('tanggal_order');
+
+        if (serviceSelect) serviceSelect.addEventListener('change', calculateTotalHarga);
+        if (qtyInput) qtyInput.addEventListener('input', calculateTotalHarga);
+        if (beratInput) beratInput.addEventListener('input', calculateTotalHarga);
+        if (tanggalOrderInput) tanggalOrderInput.addEventListener('input', calculateTotalHarga);
+
+        calculateTotalHarga();
+    });
+</script>
 
 @endsection
