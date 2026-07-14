@@ -84,6 +84,27 @@ class AuthController extends Controller
     }
 
     /**
+     * Update the authenticated user's profile.
+     */
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        $user = $request->user();
+        $user->update(['name' => $validated['name']]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Profil berhasil diperbarui',
+            'data' => [
+                'user' => $user,
+            ],
+        ]);
+    }
+
+    /**
      * Revoke the token used for the current request.
      */
     public function logout(Request $request): JsonResponse

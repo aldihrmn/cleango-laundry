@@ -20,7 +20,7 @@ class OrderController extends Controller
     public function index(Request $request): JsonResponse
     {
         $orders = $request->user()->orders()
-            ->with(['orderItems.service', 'statusLogs'])
+            ->with(['orderItems.service', 'statusLogs', 'payment'])
             ->when($request->query('status'), function ($query, $status) {
                 $query->where('status', $status);
             })
@@ -57,6 +57,7 @@ class OrderController extends Controller
         $order->load([
             'orderItems.service',
             'statusLogs' => fn ($query) => $query->orderBy('created_at', 'asc'),
+            'payment',
         ]);
 
         return response()->json([
@@ -167,6 +168,7 @@ class OrderController extends Controller
         $order->load([
             'orderItems.service',
             'statusLogs' => fn ($query) => $query->orderBy('created_at', 'asc'),
+            'payment',
         ]);
 
         return response()->json([
@@ -237,6 +239,42 @@ class OrderController extends Controller
                 'status_pembayaran' => 'Lunas',
                 'tanggal_bayar' => now(),
             ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $payment,
+        ]);
+    }
+
+    /**
+     * Display the latest payment status for the specified order.
+     */
+    public function paymentStatus(Request $request, $id): JsonResponse
+    {
+        $order = Order::find($id);
+
+        if (! $order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order tidak ditemukan',
+            ], 404);
+        }
+
+        if ($order->user_id !== $request->user()->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak memiliki akses ke order ini',
+            ], 403);
+        }
+
+        $payment = Payment::where('order_id', $order->id)->latest()->first();
+
+        if (! $payment) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Belum ada pembayaran untuk order ini',
+            ], 404);
         }
 
         return response()->json([
